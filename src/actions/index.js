@@ -4,6 +4,6 @@ export const increment = () => ({
 });
 
 export const DECREMENT = "DECREMENT";
-export const increment = () => ({
+export const decrement = () => ({
   type: "DECREMENT"
 });
