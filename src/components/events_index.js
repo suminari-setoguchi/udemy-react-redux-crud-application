@@ -10,13 +10,17 @@ class EventsIndex extends Component {
   }
 
   renderEvents() {
-    return _.map(this.props.events, (event) => (
-      <tr key={event.id}>
-        <td>{event.id}</td>
-        <td>{event.title}</td>
-        <td>{event.body}</td>
-      </tr>
-    ))
+    console.log(this.props.events);
+
+    return (
+      _.map(this.props.events, (event) => (
+        <tr key={event.id}>
+          <td>{event.id}</td>
+          <td>{event.title}</td>
+          <td>{event.body}</td>
+        </tr>
+      ))
+    )
   }
 
   render() {
