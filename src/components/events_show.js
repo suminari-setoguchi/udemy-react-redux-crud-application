@@ -12,6 +12,14 @@ class EventsShow extends Component {
     this.onDeleteClick = this.onDeleteClick.bind(this)
   }
 
+  componentDidMount(){
+    const { id } = this.props.match.params;
+
+    if(id){
+      this.props.getEvent(id)
+    }
+  }
+
   renderField(field){
     const { input, label, type, meta: { touched, error } } = field;
 
@@ -35,12 +43,12 @@ class EventsShow extends Component {
   }
 
   async onSubmit(values) {
-    // await this.props.postEvent(values)
+    await this.props.putEvent(values)
     this.props.history.push('/')
   }
 
   render() {
-    const { handleSubmit, pristine, submitting } = this.props
+    const { handleSubmit, pristine, submitting, invalid } = this.props
 
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -51,7 +59,7 @@ class EventsShow extends Component {
           <Field label="Body" name="body" type="text" component={this.renderField} />
         </div>
         <div>
-          <input type="submit" value="Submit" disabled={pristine || submitting} />
+          <input type="submit" value="Submit" disabled={pristine || submitting || invalid} />
           <Link to="/">Cancel</Link>
           <Link to="/" onClick={this.onDeleteClick}>Delete</Link>
         </div>
@@ -75,10 +83,17 @@ const validate = (values) => {
   )
 };
 
+const mapStateToProps = (state, ownProps) => {
+  const event = state.events[ownProps.match.params.id]
+  return { initialValues: event, event }
+}
+
 const mapDispatchToProps = (dispatch) => ({
-  deleteEvent: (id) => dispatch(deleteEvent(id))
+  getEvent: (id) => dispatch(getEvent(id)),
+  putEvent: (values) => dispatch(putEvent(values)),
+  deleteEvent: (id) => dispatch(deleteEvent(id)),
 })
 
-export default connect(null, mapDispatchToProps)(
-  reduxForm({ validate, form: "eventShowForm" })(EventsShow)
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({ validate, form: "eventShowForm", enableReinitialize: true })(EventsShow)
 )
